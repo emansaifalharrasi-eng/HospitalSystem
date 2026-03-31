@@ -67,8 +67,9 @@ namespace HospitalSystem
                 Console.WriteLine("6. Transfer Patient to Another Doctor ");
                 Console.WriteLine("7. View Most Visited Patients"); // NEW
                 Console.WriteLine("8. Search Patients by Department"); // NEW
-                Console.WriteLine("9. Billing Report "); // NEW
-                Console.WriteLine("10. Exit");
+                Console.WriteLine("9. Billing Report "); // NEw
+                Console.WriteLine("10. runtime");
+                Console.WriteLine("11. Exit");
                 Console.Write("Choose option: ");
 
 
@@ -83,6 +84,11 @@ namespace HospitalSystem
                         Console.Write("name: ");
                         patientNames[lastPatientIndex] = Console.ReadLine();
 
+                        patientIDs[lastPatientIndex] = "P00" + lastPatientIndex;
+                        Console.WriteLine("Patient ID: " + patientIDs[lastPatientIndex]);
+
+
+
                         Console.Write("patient ID: ");
                         patientIDs[lastPatientIndex] = Console.ReadLine();
 
@@ -93,7 +99,9 @@ namespace HospitalSystem
                         departments[lastPatientIndex] = Console.ReadLine();
 
                         admitted[lastPatientIndex] = false;
-                        assignedDoctors[lastPatientIndex] = "";
+
+                        Console.Write("assignedDoctor: ");
+                        assignedDoctors[lastPatientIndex] = Console.ReadLine();
                         visitCount[lastPatientIndex] = 0;
                         billingAmount[lastPatientIndex] = 0;
 
@@ -120,12 +128,12 @@ namespace HospitalSystem
                                 if (admitted[i] == false)
                                 {
                                     Console.Write("patient name: ");
-                                    assignedDoctors[i] = Console.ReadLine();
+                                    patientNames[i] = Console.ReadLine();
                                     admitted[i] = false;
                                     visitCount[i]++;
 
 
-                                    Console.WriteLine("Patient admitted successfully and assigned to"+ assignedDoctors[i]);
+                                    Console.WriteLine("Patient admitted successfully and assigned to" + assignedDoctors[i]);
                                     Console.WriteLine("Patient is already admitted under " + assignedDoctors[i] + visitCount[i] + " times");
                                 }
                                 else
@@ -280,34 +288,34 @@ namespace HospitalSystem
 
                     case 6://Transfer Patient to Another Doctor 
 
-                        Console.Write("Enter current patient name: ");
-                        string firstPtient = Console.ReadLine();
+                        Console.Write("Enter current doctor name: ");
+                        string firstDoctor = Console.ReadLine();
 
-                        Console.Write("Enter new borrower name: ");
-                        string secondpatient = Console.ReadLine();
+                        Console.Write("Enter new doctor name: ");
+                        string secondDoctor = Console.ReadLine();
 
-                        bool firstpatientFound = false;
-                        int firstpatientIndex = 0;
+                        bool firstDoctorFound = false;
+                        int firstDoctorIndex = 0;
 
                         for (int i = 0; i <= lastPatientIndex; i++)
                         {
-                            if (firstPtient == patientNames[i])
+                            if (firstDoctor == assignedDoctors[i])
                             {
-                                firstpatientIndex = i;
-                                firstpatientFound = true;
+                                firstDoctorIndex = i;
+                                firstDoctorFound = true;
                                 break;
                             }
                         }
 
-                        if (firstpatientFound == false)
+                        if (firstDoctorFound == false)
                         {
-                            Console.WriteLine("Current borrower name not found");
+                            Console.WriteLine("Current doctor name not found");
                         }
                         else
                         {
-                            patientNames[firstpatientIndex] = secondpatient;
-                            Console.WriteLine("patient transferred successfully!");
-                            Console.WriteLine("patient" + patientNames[firstpatientIndex] + "' is now transferd by " + secondpatient);
+                            assignedDoctors[firstDoctorIndex] = secondDoctor;
+                            Console.WriteLine("doctor transferred successfully!");
+                            Console.WriteLine("doctor " + patientNames[firstDoctorIndex] + " is now transferd by " + secondDoctor);
                         }
 
 
@@ -371,50 +379,43 @@ namespace HospitalSystem
 
                         if (BillingOption == 1)
                         {
-                            // System-wide total
-                            double billig = 0;
+                            double totalBill = 0;
 
                             for (int i = 0; i <= lastPatientIndex; i++)
                             {
-                                billingAmount[i] += billig;
-
-
-                                Console.WriteLine("----------------------------------------");
-                                Console.WriteLine("Total bill: " + billingAmount[i] + " OMR");
+                                totalBill += billingAmount[i];
                             }
-                        }
 
+                            Console.WriteLine("----------------------------------------");
+                            Console.WriteLine("Total bill: " + totalBill + " OMR");
+                        }
                         else if (BillingOption == 2)
                         {
-                            // Individual patient
                             Console.Write("Enter patient name or ID: ");
                             string Input = Console.ReadLine();
 
                             double patientbill = 0;
-                            bool bill=false;
+                            bool found = false;
+
                             for (int i = 0; i <= lastPatientIndex; i++)
                             {
-                                if (patientNames[i] == Input || patientNames[i] == Input)
+                                if (patientNames[i] == Input || patientIDs[i] == Input)
                                 {
-
                                     patientbill += billingAmount[i];
-                                    bill = true;
+                                    found = true;
                                 }
+                            }
 
-
-                                Console.WriteLine("-");
-                                if (bill == true)
-                                {
-                                    Console.WriteLine("billing amount is" + Input[i] + ": " + patientbill + " OMR");
-                                }
-                                else
-                                {
-                                    Console.WriteLine("No billing records found for this patient");
-                                }
+                            if (found)
+                            {
+                                Console.WriteLine("Billing amount for " + Input + ": " + patientbill + " OMR");
+                            }
+                            else
+                            {
+                                Console.WriteLine("No billing records found for this patient");
                             }
                         }
                         break;
-
 
 
 
@@ -429,6 +430,20 @@ namespace HospitalSystem
 
                         break;
 
+                    case 11:
+                        try
+                        {
+                            int divisor = 0;
+                            int result = 10 / divisor;
+                            Console.WriteLine(result);
+                        }
+                        catch (DivideByZeroException ex)
+                        { Console.WriteLine("Error: " + ex.Message); }
+
+
+                        break;
+
+
                     default:
                         Console.WriteLine("Invalid option. Please try again.");
                         break;
@@ -441,6 +456,8 @@ namespace HospitalSystem
         }
     }
 }
+
+
 
 
 
